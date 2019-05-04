@@ -5,7 +5,7 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+from django.db.models import Q
 
 class DataViewSet(viewsets.ModelViewSet):
 
@@ -71,3 +71,19 @@ class DataViewSingleUser(viewsets.ModelViewSet):
         queryset = self.queryset
         query_set = queryset.filter(user=self.request.user)
         return query_set
+
+
+class DataViewSingleActivity(viewsets.ModelViewSet):
+
+    serializer_class = DataTestingSerializer
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = Testing.objects.all()
+        query = self.request.GET.get('q')
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(activity__icontains=query)
+            ).distinct()
+        return queryset_list
