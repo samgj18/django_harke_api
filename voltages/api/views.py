@@ -6,9 +6,10 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Q
+from datetime import date
+
 
 class DataViewSet(viewsets.ModelViewSet):
-
     queryset = UserData.objects.all()
     serializer_class = DataSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -23,12 +24,6 @@ class DataViewSet(viewsets.ModelViewSet):
                 kwargs["many"] = True
 
         return super(DataViewSet, self).get_serializer(*args, **kwargs)
-
-    @action(methods=['get'], detail=False)
-    def newest(self, request):
-        newest = self.get_queryset().order_by('created').last()
-        serializer = self.get_serializer_class()(newest)
-        return Response(serializer.data)
 
 
 class DataTestViewSet(viewsets.ModelViewSet):
@@ -48,29 +43,28 @@ class DataTestViewSet(viewsets.ModelViewSet):
 
         return super(DataTestViewSet, self).get_serializer(*args, **kwargs)
 
-    @action(methods=['get'], detail=False)
-    def newest(self, request):
-        newest = self.get_queryset().order_by('created').last()
-        serializer = self.get_serializer_class()(newest)
-        return Response(serializer.data)
-
 
 class DataViewSingleUser(viewsets.ModelViewSet):
-    queryset = UserData.objects.all()
     serializer_class = DataSerializer
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     permission_classes = (IsAuthenticated,)
 
-    @action(methods=['get'], detail=False)
-    def newest(self, request):
-        newest = self.get_queryset().order_by('created').last()
-        serializer = self.get_serializer_class()(newest)
-        return Response(serializer.data)
-
-    def get_queryset(self):
-        queryset = self.queryset
-        query_set = queryset.filter(user=self.request.user)
-        return query_set
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = UserData.objects.all().filter(user=self.request.user)
+        dates = self.request.GET.get('q')
+        if dates:
+            dates = dates.split('-')
+            date_2_complete = dates[1].split(',')
+            date_1_complete = dates[0].split(',')
+            date_1 = int(date_1_complete[0])
+            date_2 = int(date_1_complete[1])
+            date_3 = int(date_1_complete[2])
+            date_4 = int(date_2_complete[0])
+            date_5 = int(date_2_complete[1])
+            date_6 = int(date_2_complete[2])
+            queryset_list = UserData.objects.filter(user=self.request.user).filter(
+                created__range=(date(date_1, date_2, date_3), date(date_4, date_5, date_6))).all()
+        return queryset_list
 
 
 class DataViewSingleActivity(viewsets.ModelViewSet):
