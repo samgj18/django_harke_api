@@ -1,3 +1,11 @@
 {
-    "python.pythonPath": ".env/bin/python3.7"
+    "editor.formatOnSave": true,
+    "python.linting.pep8Enabled": true,
+    "python.pythonPath": ".env/bin/python3.7",
+    "python.linting.pylintPath": "/usr/local/bin/pylint",
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_django"
+    ],
+    "python.linting.pylintEnabled": true
 }
