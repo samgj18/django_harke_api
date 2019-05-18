@@ -23,3 +23,11 @@ class Testing(models.Model):
         decimal_places=3, max_digits=65)
     activity = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class VerifyTesting(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    detected_activity = models.CharField(max_length=255)
+    real_activity = models.CharField(max_length=255)
+    datetime = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)

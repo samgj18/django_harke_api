@@ -8,7 +8,7 @@ from rest_auth.models import TokenModel
 from rest_framework import serializers
 
 # Models
-from voltages.models import UserData, Testing
+from voltages.models import UserData, Testing, VerifyTesting
 
 
 class DataSerializer(serializers.ModelSerializer):
@@ -21,12 +21,22 @@ class DataSerializer(serializers.ModelSerializer):
 
 
 class DataTestingSerializer(serializers.ModelSerializer):
-    ''' Serializer of all the data from all users without user tag, for training purposes'''
+    ''' Serializer of all the data from all users without user tag, 
+    for training purposes'''
     class Meta:  # pylint: disable=too-few-public-methods
         '''Meta content of the serializer'''
         model = Testing
         fields = ('voltage_coil_1', 'voltage_coil_2',
                   'voltage_generated_by_user', 'activity')
+
+
+class DataVerifyTestingSerializer(serializers.ModelSerializer):
+    ''' Serializer of all the data, for testing purposes'''
+    class Meta:  # pylint: disable=too-few-public-methods
+        '''Meta content of the serializer'''
+        model = VerifyTesting
+        fields = ('user', 'detected_activity',
+                  'real_activity', 'datetime')
 
 
 class UserSerializer(serializers.ModelSerializer):
