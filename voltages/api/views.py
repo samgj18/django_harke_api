@@ -1,7 +1,7 @@
 '''Views API'''
 
 # Python
-from datetime import date
+from datetime import datetime
 
 # Django
 from django.db.models import Q
@@ -96,14 +96,23 @@ class DataViewSingleUser(ModelViewSet):  # pylint: disable=too-many-ancestors
             dates = dates.split('-')
             date_2_complete = dates[1].split(',')
             date_1_complete = dates[0].split(',')
-            date_1 = int(date_1_complete[0])
-            date_2 = int(date_1_complete[1])
-            date_3 = int(date_1_complete[2])
-            date_4 = int(date_2_complete[0])
-            date_5 = int(date_2_complete[1])
-            date_6 = int(date_2_complete[2])
+            year_1 = int(date_1_complete[0])
+            month_1 = int(date_1_complete[1])
+            day_1 = int(date_1_complete[2])
+            hour_1 = int(date_1_complete[3])
+            minute_1 = int(date_1_complete[4])
+            second_1 = int(date_1_complete[5])
+
+            year_2 = int(date_2_complete[0])
+            month_2 = int(date_2_complete[1])
+            day_2 = int(date_2_complete[2])
+            hour_2 = int(date_2_complete[3])
+            minute_2 = int(date_2_complete[4])
+            second_2 = int(date_2_complete[5])
+
             queryset_list = UserData.objects.filter(user=self.request.user).filter(  # pylint: disable=no-member
-                created__range=(date(date_1, date_2, date_3), date(date_4, date_5, date_6))).all()
+                datetime__range=(datetime(year_1, month_1, day_1, hour_1, minute_1, second_1),
+                                 datetime(year_2, month_2, day_2, hour_2, minute_2, second_2))).all()
         return queryset_list
 
 
