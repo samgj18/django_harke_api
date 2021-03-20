@@ -6,7 +6,7 @@ Django==2.2.13
 django-allauth==0.39.1
 django-cors-headers==2.5.2
 django-rest-auth==0.9.5
-djangorestframework==3.9.2
+djangorestframework==3.11.2
 idna==2.8
 oauthlib==3.0.1
 pycodestyle==2.5.0
